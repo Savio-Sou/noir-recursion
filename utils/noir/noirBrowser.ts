@@ -1,10 +1,12 @@
 import { decompressSync } from 'fflate';
-import {
-  BarretenbergApiAsync,
+/*import {
+  Barretenberg,
   Crs,
-  newBarretenbergApiAsync,
   RawBuffer,
-} from '@aztec/bb.js/dest/browser/index.js';
+} from '@aztec/bb.js/dest/browser/index.js';*/
+//const { Barretenberg, RawBuffer, Crs } = await import('@aztec/bb.js');//
+const { loadModule } = await import('@aztec/bb.js');
+const { Barretenberg, RawBuffer, Crs } = await loadModule();
 import initACVM, { executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers'; // I'm lazy so I'm using ethers to pad my input
 import { Ptr, Fr } from '@aztec/bb.js/dest/node/types';
@@ -15,7 +17,7 @@ export class NoirBrowser {
   acirBuffer: Uint8Array = Uint8Array.from([]);
   acirBufferUncompressed: Uint8Array = Uint8Array.from([]);
 
-  api = {} as BarretenbergApiAsync;
+  api = {} as Barretenberg;
   acirComposer = {} as Ptr;
 
   constructor(circuit: Object) {
@@ -27,7 +29,7 @@ export class NoirBrowser {
     this.acirBuffer = Buffer.from(this.circuit.bytecode, 'base64');
     this.acirBufferUncompressed = decompressSync(this.acirBuffer);
 
-    this.api = await newBarretenbergApiAsync(4);
+    this.api = await Barretenberg.new(4);
 
     const [exact, total, subgroup] = await this.api.acirGetCircuitSizes(
       this.acirBufferUncompressed,

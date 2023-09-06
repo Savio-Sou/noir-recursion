@@ -1,8 +1,7 @@
 import { decompressSync } from 'fflate';
 import {
-  BarretenbergApiAsync,
+  Barretenberg,
   Crs,
-  newBarretenbergApiAsync,
   RawBuffer,
 } from '@aztec/bb.js/dest/node/index.js';
 import { executeCircuit, compressWitness } from '@noir-lang/acvm_js';
@@ -14,7 +13,7 @@ export class NoirNode {
   acirBuffer: Uint8Array = Uint8Array.from([]);
   acirBufferUncompressed: Uint8Array = Uint8Array.from([]);
 
-  api = {} as BarretenbergApiAsync;
+  api = {} as Barretenberg;
   acirComposer = {} as Ptr;
 
   constructor(circuit: Object) {
@@ -25,7 +24,7 @@ export class NoirNode {
     this.acirBuffer = Buffer.from(this.circuit.bytecode, 'base64');
     this.acirBufferUncompressed = decompressSync(this.acirBuffer);
 
-    this.api = await newBarretenbergApiAsync(16);
+    this.api = await Barretenberg.new(16);
 
     const [exact, total, subgroup] = await this.api.acirGetCircuitSizes(
       this.acirBufferUncompressed,
