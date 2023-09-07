@@ -1,12 +1,10 @@
 import { decompressSync } from 'fflate';
-/*import {
-  Barretenberg,
+import {
   Crs,
+  Barretenberg,
   RawBuffer,
-} from '@aztec/bb.js/dest/browser/index.js';*/
-//const { Barretenberg, RawBuffer, Crs } = await import('@aztec/bb.js');//
-const { loadModule } = await import('@aztec/bb.js');
-const { Barretenberg, RawBuffer, Crs } = await loadModule();
+  // @ts-ignore
+} from '@aztec/bb.js';
 import initACVM, { executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers'; // I'm lazy so I'm using ethers to pad my input
 import { Ptr, Fr } from '@aztec/bb.js/dest/node/types';
